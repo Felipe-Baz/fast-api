@@ -1,6 +1,7 @@
-from typing import Union
+from typing import Annotated, Union
 
 from fastapi import FastAPI
+from fastapi.params import Path, Query
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -18,7 +19,16 @@ def read_root():
 
 
 @app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
+def read_item(
+    item_id: Annotated[
+        int, 
+        Path(title="The ID of the item to get", ge=0, le=10)
+    ],
+    q: Annotated[
+        str | None, 
+        Query(min_length=3, max_length=15)
+    ] = None
+):
     return {"item_id": item_id, "q": q}
 
 
