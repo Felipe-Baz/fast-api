@@ -1,7 +1,7 @@
 from typing import Annotated, Union
 
 from fastapi import FastAPI
-from fastapi.params import Path, Query
+from fastapi.params import Body, Path, Query
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -33,5 +33,14 @@ def read_item(
 
 
 @app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
+def update_item(
+    item_id: Annotated[
+        int, 
+        Path(title="The ID of the item to get", ge=0, le=10)
+    ],
+    item: Annotated[
+        Item, 
+        Body()
+    ]
+):
     return {"item_name": item.name, "item_price": item.price, "item_id": item_id}
