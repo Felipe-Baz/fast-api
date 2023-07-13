@@ -1,9 +1,9 @@
-from typing import Annotated, Union
+from typing import Annotated
 from fastapi import APIRouter
 from fastapi.params import Body, Depends, Path, Query
-from pydantic import BaseModel, Field
 
 from fast_api.app.dependencies import get_token_header
+from fast_api.app.models.item import Item
 
 router = APIRouter()
 
@@ -13,17 +13,6 @@ router = APIRouter(
     dependencies=[Depends(get_token_header)],
     responses={404: {"description": "Not found"}},
 )
-
-class Item(BaseModel):
-    name: str = Field(
-        title="The name of the item", max_length=300
-    )
-    price: float = Field(
-        title="The price of the item", gt=0
-    )
-    is_offer: Union[bool, None] = Field(
-        default=False, title="The price of the item", gt=0
-    )
 
 @router.get("/{item_id}")
 def read_item(
