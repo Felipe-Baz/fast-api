@@ -2,6 +2,7 @@ import time
 from typing import Annotated, Union
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.params import Body, Cookie, Depends, Path, Query
 from pydantic import BaseModel, Field
 
@@ -18,6 +19,19 @@ class Item(BaseModel):
     is_offer: Union[bool, None] = Field(
         default=False, title="The price of the item", gt=0
     )
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
