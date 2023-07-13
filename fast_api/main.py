@@ -1,7 +1,7 @@
 from typing import Annotated, Union
 
 from fastapi import FastAPI
-from fastapi.params import Body, Path, Query
+from fastapi.params import Body, Cookie, Path, Query
 from pydantic import BaseModel, Field
 
 app = FastAPI()
@@ -66,3 +66,7 @@ def update_item(
     ]
 ):
     return {"item_name": item.name, "item_price": item.price, "item_id": item_id}
+
+@app.get("/cookies")
+def cookieGet(ads_id: Annotated[str | None, Cookie()] = None):
+    return {"cookies": ads_id}
