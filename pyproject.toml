@@ -11,6 +11,9 @@ python = "^3.10"
 fastapi = "^0.100.0"
 
 
+[tool.poetry.group.test.dependencies]
+httpx = "^0.24.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
