@@ -2,15 +2,21 @@ from typing import Annotated, Union
 
 from fastapi import FastAPI
 from fastapi.params import Body, Path, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 
 class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None] = None
+    name: str = Field(
+        title="The name of the item", max_length=300
+    )
+    price: float = Field(
+        title="The price of the item", gt=0
+    )
+    is_offer: Union[bool, None] = Field(
+        default=False, title="The price of the item", gt=0
+    )
 
 
 @app.get("/")
@@ -40,7 +46,23 @@ def update_item(
     ],
     item: Annotated[
         Item, 
-        Body()
+        Body(
+            examples=[
+                {
+                    "name": "Foo",
+                    "price": 35.4
+                },
+                {
+                    "name": "Bar",
+                    "price": "35.4"
+                },
+                {
+                    "name": "Bar",
+                    "price": 35.4,
+                    "is_offer": True
+                },
+            ],
+        )
     ]
 ):
     return {"item_name": item.name, "item_price": item.price, "item_id": item_id}
